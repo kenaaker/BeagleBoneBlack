@@ -1,6 +1,5 @@
 #include "motor_control.h"
 #include "ui_motor_control.h"
-#include <GPIOoo.h>
 
 motor_control::motor_control(QWidget *parent) :
     QMainWindow(parent),

@@ -3,6 +3,7 @@
 #include <QString>
 
 #include <motor.h>
+#include "adafruit_bbio_pwm.h"
 
 motor::motor() {
     pwm_pin = "Uninit";
@@ -39,11 +40,14 @@ motor::motor(e_motor_id m_id) {
     } /* endswitch */
     motor_id = m_id;
     motor_speed = 0;
-    gp = GPIOoo::getInstance();
-    const char *pin_names[2];
-    pin_names[0] = pwm_pin.toStdString().c_str();
-    pin_names[1] = dir_pin.toStdString().c_str();
-    motor_pin = gp->claim((char **)pin_names, 2,
-                          GPIOoo::gpioWriteSemantics::gpioWrite, GPIOoo::gpioFlags::gpioExclusive);
-};
+}
 
+void motor::motor_run(int8_t speed) {
+    uint8_t direction = (speed > 0);
+    uint8_t abs_speed = abs(speed);
+
+}
+
+void motor::motor_stop(void) {
+    motor_run(0);
+}
