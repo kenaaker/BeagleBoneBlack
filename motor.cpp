@@ -11,7 +11,7 @@ motor::motor() {
 }
 
 motor::~motor() {
-
+    delete dc;
 }
 
 /* Create the control structure to setup, run, and shutdown a motor  */
@@ -40,12 +40,14 @@ motor::motor(e_motor_id m_id) {
     } /* endswitch */
     motor_id = m_id;
     motor_speed = 0;
+    dc = new Adafruit_bbio_pwm(pwm_pin.toStdString());
 }
 
 void motor::motor_run(int8_t speed) {
     uint8_t direction = (speed > 0);
     uint8_t abs_speed = abs(speed);
 
+    dc->set_duty_cycle(speed);
 }
 
 void motor::motor_stop(void) {

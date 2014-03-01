@@ -33,7 +33,7 @@ private:
     e_motor_id motor_id;
     int8_t motor_speed;         /* negative motor speed is reverse rotation */
     /* Interfaces to GPIO stuff */
-    Adafruit_bbio_pwm dca;      /* Pulse Width Modulated motor control for motor a */
+    Adafruit_bbio_pwm *dc;      /* Pulse Width Modulated motor control for motor */
 };
 
 #endif // MOTOR_H

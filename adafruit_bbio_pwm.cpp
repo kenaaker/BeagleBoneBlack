@@ -2,6 +2,8 @@
 
 #include <QDir>
 #include <QFile>
+#include <QTextStream>
+#include <iostream>
 #include <time.h>
 #include <string>
 
@@ -134,16 +136,56 @@ int pins_table::gpio_by_name(const string &name) {
 pins_table pin_lookup;
 string control_directory;
 
+void  Adafruit_bbio_pwm::set_frequency(float in_freq) {
+    if (in_freq >= 0.0) {
+        QTextStream out(&period_file);
+        out << 1.0E9 / in_freq;
+        freq = in_freq;
+    } /* endif */
+} /* set_frequency */
+
+void Adafruit_bbio_pwm::set_duty_cycle(float in_duty) {
+    if ((in_duty >= 0.0) && (in_duty <= 100.0)) {
+        QTextStream out(&duty_file);
+        out << ((1.0E9 / freq) * (in_duty / 100.0));
+        duty_cycle_percent = in_duty;
+    } /* endif */
+    cout << "set_duty_cycle " << in_duty << " duty_file_name = \"" << duty_file_name << endl;
+}  /* set_duty_cycle */
+
+void Adafruit_bbio_pwm::set_polarity(bool in_polarity) {
+    QTextStream out(&polarity_file);
+    out << in_polarity;
+    polarity = in_polarity;
+} /* set_polarity */
+
+float Adafruit_bbio_pwm::get_frequency(void) {
+    return freq;
+} /* get_frequency */
+
+float Adafruit_bbio_pwm::get_duty_cycle(void) {
+    return duty_cycle_percent;
+}  /* get_duty_cycle */
+
+bool Adafruit_bbio_pwm::get_polarity(void) {
+   return polarity;
+} /* get_polarity */
+
 string Adafruit_bbio_pwm::build_path(const string &partial_path, const string &prefix) {
     if (!QDir(QString::fromStdString(partial_path)).exists()) {
         return "";
     } else {
+        cout << " build_path partial = \"" << partial_path << "\"" << endl;
+        cout << " build_path prefix = \"" << prefix << "\"" << endl;
         QStringList dir_filters(QString::fromStdString(prefix)+"*");
         QDir start_dir(QString::fromStdString(partial_path));
         QStringList matches = start_dir.entryList(dir_filters, QDir::Dirs);
+        cout << " filters = \"" << qPrintable(QString::fromStdString(prefix)+"*") << "\"" << endl;
+        cout << " filtered path = \"" << partial_path + qPrintable(QString::fromStdString(prefix)+"*") << "\"" << endl;
         if (matches.empty()) {
             return "";
         } else {
+            cout << " build_path return = \"" << partial_path+matches[0].toStdString() << "\"" << endl;
             return partial_path + matches[0].toStdString();
         } /* endif */
     } /* endif */
@@ -162,6 +204,9 @@ int Adafruit_bbio_pwm::load_device_tree(const string &tree_add_name) {
     } else {
         while (!tree_file.atEnd()) {
             QByteArray line = tree_file.readLine();
+            if (line.isEmpty()) {
+                break;
+            }
             string check_string(line.constData(), line.length());
             if (check_string.find(tree_add_name) != string::npos) {
                 rc = 1; /* Already loaded indicator */
@@ -181,6 +226,7 @@ int Adafruit_bbio_pwm::load_device_tree(const string &tree_add_name) {
 
 int Adafruit_bbio_pwm::unload_device_tree(const string &tree_del_name) {
     QFile tree_file;
+    QTextStream in_out(&tree_file);
     int rc = -1;
 
     tree_file.setFileName(QString::fromStdString(control_directory));
@@ -188,15 +234,17 @@ int Adafruit_bbio_pwm::unload_device_tree(const string &tree_del_name) {
         rc = -EIO;
     } else {
         while (!tree_file.atEnd()) {
-            QByteArray line = tree_file.readLine();
-            string check_string(line.constData(), line.length());
-            if (check_string.find(tree_del_name) != string::npos) { /* It IS loaded */
-                size_t colon_pos = check_string.find(":");
-                size_t num_pos = check_string.find_first_not_of(" ");
-                string slot_line = check_string.substr(num_pos, colon_pos-1);
-                QByteArray line(slot_line.c_str(), slot_line.length());
-                tree_file.write(line);
+            QString check_string = tree_file.readLine();
+            if (check_string.isEmpty()) {
+                break;
+            } /* endif */
+            if (check_string.contains(QString::fromStdString(tree_del_name))) { /* It IS loaded */
+                size_t colon_pos = check_string.indexOf(":");
+                size_t num_pos = check_string.indexOf(QRegExp("[0-9]+"));
+                QString slot_line = "-" + check_string.mid(num_pos, colon_pos-num_pos);
+                in_out << slot_line;
                 rc = 1;
+                break;
             } /* endif */
         } /* endwhile */
         tree_file.close();
@@ -205,12 +253,58 @@ int Adafruit_bbio_pwm::unload_device_tree(const string &tree_del_name) {
 } /* unload_device_tree */
 
 
-Adafruit_bbio_pwm::Adafruit_bbio_pwm() {
+Adafruit_bbio_pwm::Adafruit_bbio_pwm(const string &key) {
+    string pwm_test_path;
+    string l_pwm_name;
+
     if (load_device_tree("am33xx_pwm")) {
-        build_path("/sys/devices", "ocp");
+        ocp_dir = build_path("/sys/devices/", "ocp")+"/";
+        cout << " ocp_dir = \"" << ocp_dir << "\"" << endl;
+        l_pwm_name = "bone_pwm_"+key;
+        if (!load_device_tree(l_pwm_name)) {
+            abort();
+        } else {
+            pwm_name = l_pwm_name;
+            pwm_test_path = build_path(ocp_dir, "pwm_test_" + key);
+            cout << " pwm_test_path = \"" << pwm_test_path << "\"" << endl;
+            period_file_name = pwm_test_path + "/period";
+            period_file.setFileName(QString::fromStdString(period_file_name));
+            duty_file_name = pwm_test_path + "/duty";
+            cout << " duty_file_name = \"" << duty_file_name << endl;
+            duty_file.setFileName(QString::fromStdString(duty_file_name));
+            polarity_file_name = pwm_test_path + "/polarity";
+            polarity_file.setFileName(QString::fromStdString(polarity_file_name));
+            /* Now open all the files */
+            if (!period_file.open(QIODevice::ReadWrite)) {
+                unload_device_tree("bone_pwm_"+key);
+                abort();
+            } else {
+                if (!duty_file.open(QIODevice::ReadWrite)) {
+                    period_file.close();
+                    unload_device_tree("bone_pwm_"+key);
+                    abort();
+                } else {
+                    if (!polarity_file.open(QIODevice::ReadWrite)) {
+                        duty_file.close();
+                        period_file.close();
+                        unload_device_tree("bone_pwm_"+key);
+                        abort();
+                    } else {
+                        set_frequency(0);
+                        set_duty_cycle(20);
+//                        set_polarity(false);
+                    } /* endif */
+                } /* endif */
+            } /* endif */
+
+        } /* endif */
     } /* endif */
+
 } /* Adafruit_bbio_pmw() */
 
 Adafruit_bbio_pwm::~Adafruit_bbio_pwm() {
-
+    unload_device_tree(pwm_name);
+    period_file.close();
+    duty_file.close();
+    polarity_file.close();
 }

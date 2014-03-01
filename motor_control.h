@@ -18,10 +18,18 @@ public:
 private slots:
     void on_actionQuit_triggered();
 
+    void on_motor_a_start_clicked();
+
+    void on_motor_a_stop_clicked();
+
+    void on_motor_b_start_clicked();
+
+    void on_motor_b_stop_clicked();
+
 private:
     Ui::motor_control *ui;
-    motor m_dca;
-    motor m_dcb;
+    motor *m_dca;
+    motor *m_dcb;
 };
 
 #endif // MOTOR_CONTROL_H
