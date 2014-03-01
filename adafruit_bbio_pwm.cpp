@@ -290,9 +290,9 @@ Adafruit_bbio_pwm::Adafruit_bbio_pwm(const string &key) {
                         unload_device_tree("bone_pwm_"+key);
                         abort();
                     } else {
-                        set_frequency(0);
-                        set_duty_cycle(20);
-//                        set_polarity(false);
+                        set_frequency(2000);
+                        set_duty_cycle(0);
+                        set_polarity(false);
                     } /* endif */
                 } /* endif */
             } /* endif */

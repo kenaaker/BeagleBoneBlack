@@ -26,6 +26,10 @@ private slots:
 
     void on_motor_b_stop_clicked();
 
+    void on_motor_b_speed_sliderMoved(int position);
+
+    void on_motor_a_speed_sliderMoved(int position);
+
 private:
     Ui::motor_control *ui;
     motor *m_dca;

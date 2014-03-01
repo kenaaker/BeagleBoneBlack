@@ -10,8 +10,6 @@ motor_control::motor_control(QWidget *parent) :
     ui->motor_b_stop->setChecked(true);
     m_dca = new motor(e_motor_id::e_motor_a);
     m_dcb = new motor(e_motor_id::e_motor_b);
-    m_dca->motor_run(20.0);
-    m_dcb->motor_run(10.0);
 }
 
 motor_control::~motor_control()
@@ -28,7 +26,7 @@ void motor_control::on_actionQuit_triggered()
 
 void motor_control::on_motor_a_start_clicked()
 {
-    m_dca->motor_run(20);
+    m_dca->motor_run(10);
 }
 
 void motor_control::on_motor_a_stop_clicked()
@@ -43,4 +41,14 @@ void motor_control::on_motor_b_start_clicked()
 void motor_control::on_motor_b_stop_clicked()
 {
     m_dcb->motor_run(0);
+}
+
+void motor_control::on_motor_a_speed_sliderMoved(int position)
+{
+    m_dca->motor_run(position);
+}
+
+void motor_control::on_motor_b_speed_sliderMoved(int position)
+{
+    m_dcb->motor_run(position);
 }

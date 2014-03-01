@@ -47,7 +47,7 @@ void motor::motor_run(int8_t speed) {
     uint8_t direction = (speed > 0);
     uint8_t abs_speed = abs(speed);
 
-    dc->set_duty_cycle(speed);
+    dc->set_duty_cycle(abs_speed);
 }
 
 void motor::motor_stop(void) {
