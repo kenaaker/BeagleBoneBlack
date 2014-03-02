@@ -150,7 +150,7 @@ void Adafruit_bbio_pwm::set_duty_cycle(float in_duty) {
         out << ((1.0E9 / freq) * (in_duty / 100.0));
         duty_cycle_percent = in_duty;
     } /* endif */
-    cout << "set_duty_cycle " << in_duty << " duty_file_name = \"" << duty_file_name << endl;
+    // cout << "set_duty_cycle " << in_duty << " duty_file_name = \"" << duty_file_name << endl;
 }  /* set_duty_cycle */
 
 void Adafruit_bbio_pwm::set_polarity(bool in_polarity) {
@@ -175,17 +175,17 @@ string Adafruit_bbio_pwm::build_path(const string &partial_path, const string &p
     if (!QDir(QString::fromStdString(partial_path)).exists()) {
         return "";
     } else {
-        cout << " build_path partial = \"" << partial_path << "\"" << endl;
-        cout << " build_path prefix = \"" << prefix << "\"" << endl;
+        //cout << " build_path partial = \"" << partial_path << "\"" << endl;
+        //cout << " build_path prefix = \"" << prefix << "\"" << endl;
         QStringList dir_filters(QString::fromStdString(prefix)+"*");
         QDir start_dir(QString::fromStdString(partial_path));
         QStringList matches = start_dir.entryList(dir_filters, QDir::Dirs);
-        cout << " filters = \"" << qPrintable(QString::fromStdString(prefix)+"*") << "\"" << endl;
-        cout << " filtered path = \"" << partial_path + qPrintable(QString::fromStdString(prefix)+"*") << "\"" << endl;
+        //cout << " filters = \"" << qPrintable(QString::fromStdString(prefix)+"*") << "\"" << endl;
+        //cout << " filtered path = \"" << partial_path + qPrintable(QString::fromStdString(prefix)+"*") << "\"" << endl;
         if (matches.empty()) {
             return "";
         } else {
-            cout << " build_path return = \"" << partial_path+matches[0].toStdString() << "\"" << endl;
+            //cout << " build_path return = \"" << partial_path+matches[0].toStdString() << "\"" << endl;
             return partial_path + matches[0].toStdString();
         } /* endif */
     } /* endif */
@@ -259,18 +259,18 @@ Adafruit_bbio_pwm::Adafruit_bbio_pwm(const string &key) {
 
     if (load_device_tree("am33xx_pwm")) {
         ocp_dir = build_path("/sys/devices/", "ocp")+"/";
-        cout << " ocp_dir = \"" << ocp_dir << "\"" << endl;
+        //cout << " ocp_dir = \"" << ocp_dir << "\"" << endl;
         l_pwm_name = "bone_pwm_"+key;
         if (!load_device_tree(l_pwm_name)) {
             abort();
         } else {
             pwm_name = l_pwm_name;
             pwm_test_path = build_path(ocp_dir, "pwm_test_" + key);
-            cout << " pwm_test_path = \"" << pwm_test_path << "\"" << endl;
+            //cout << " pwm_test_path = \"" << pwm_test_path << "\"" << endl;
             period_file_name = pwm_test_path + "/period";
             period_file.setFileName(QString::fromStdString(period_file_name));
             duty_file_name = pwm_test_path + "/duty";
-            cout << " duty_file_name = \"" << duty_file_name << endl;
+            //cout << " duty_file_name = \"" << duty_file_name << endl;
             duty_file.setFileName(QString::fromStdString(duty_file_name));
             polarity_file_name = pwm_test_path + "/polarity";
             polarity_file.setFileName(QString::fromStdString(polarity_file_name));

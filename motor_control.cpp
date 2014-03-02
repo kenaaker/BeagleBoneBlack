@@ -26,29 +26,33 @@ void motor_control::on_actionQuit_triggered()
 
 void motor_control::on_motor_a_start_clicked()
 {
-    m_dca->motor_run(10);
+    ui->motor_a_speed->setValue(10);
 }
 
 void motor_control::on_motor_a_stop_clicked()
 {
-    m_dca->motor_run(0);
+    ui->motor_a_speed->setValue(0);
 }
 void motor_control::on_motor_b_start_clicked()
 {
-    m_dcb->motor_run(20);
+    ui->motor_b_speed->setValue(20);
 }
 
 void motor_control::on_motor_b_stop_clicked()
 {
-    m_dcb->motor_run(0);
+    ui->motor_b_speed->setValue(0);
 }
 
-void motor_control::on_motor_a_speed_sliderMoved(int position)
+void motor_control::on_motor_a_speed_valueChanged(int position)
 {
     m_dca->motor_run(position);
+    ui->motor_a_start->setChecked(position != 0);
+    ui->motor_a_stop->setChecked(position == 0);
 }
 
-void motor_control::on_motor_b_speed_sliderMoved(int position)
+void motor_control::on_motor_b_speed_valueChanged(int position)
 {
     m_dcb->motor_run(position);
+    ui->motor_b_start->setChecked(position != 0);
+    ui->motor_b_stop->setChecked(position == 0);
 }

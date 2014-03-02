@@ -1,6 +1,7 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 #include "adafruit_bbio_pwm.h"
+#include "adafruit_bbio_gpio.h"
 
 #define motor_a_pwm_pin "P8_13";
 #define motor_a_dir_pin "P8_14";
@@ -26,14 +27,16 @@ public:
     ~motor();
     void motor_run(int8_t speed);
     void motor_stop(void);
-    QString pwm_pin;
-    QString dir_pin;
 
 private:
+    QString pwm_pin;
+    QString dir_pin;
+    int gpio_dir_pin;
     e_motor_id motor_id;
     int8_t motor_speed;         /* negative motor speed is reverse rotation */
     /* Interfaces to GPIO stuff */
     Adafruit_bbio_pwm *dc;      /* Pulse Width Modulated motor control for motor */
+    Adafruit_bbio_gpio *dir;    /* Direction control GPIO pin */
 };
 
 #endif // MOTOR_H
