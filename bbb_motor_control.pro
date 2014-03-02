@@ -17,12 +17,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
     motor_control.cpp \
     motor.cpp \
-    adafruit_bbio_pwm.cpp
+    adafruit_bbio_pwm.cpp \
+    adafruit_bbio_gpio.cpp
 
 HEADERS  += motor_control.h \
     motor.h \
     adafruit_bbio_pwm.h \
-    adafruit_bbio_pwm_global.h
+    adafruit_bbio_pwm_global.h \
+    adafruit_bbio_gpio.h
 
 FORMS    += motor_control.ui
 
