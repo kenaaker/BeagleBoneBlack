@@ -1,5 +1,6 @@
 #include "motor_control.h"
 #include "ui_motor_control.h"
+#include "gpio_sensor.h"
 
 motor_control::motor_control(QWidget *parent) :
     QMainWindow(parent),
@@ -10,6 +11,8 @@ motor_control::motor_control(QWidget *parent) :
     ui->motor_b_stop->setChecked(true);
     m_dca = new motor(e_motor_id::e_motor_a);
     m_dcb = new motor(e_motor_id::e_motor_b);
+    sr1 = new gpio_sensor("P9_25", "P9_30");
+    sr2 = new gpio_sensor("P9_27", "P9_40");
 }
 
 motor_control::~motor_control()

@@ -18,13 +18,18 @@ SOURCES += main.cpp\
     motor_control.cpp \
     motor.cpp \
     adafruit_bbio_pwm.cpp \
-    adafruit_bbio_gpio.cpp
+    adafruit_bbio_gpio.cpp \
+    adafruit_bbio_adc.cpp \
+    adafruit_bbio_util.cpp \
+    gpio_sensor.cpp
 
 HEADERS  += motor_control.h \
     motor.h \
     adafruit_bbio_pwm.h \
-    adafruit_bbio_pwm_global.h \
-    adafruit_bbio_gpio.h
+    adafruit_bbio_gpio.h \
+    adafruit_bbio_adc.h \
+    adafruit_bbio_util.h \
+    gpio_sensor.h
 
 FORMS    += motor_control.ui
 

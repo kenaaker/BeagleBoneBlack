@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <motor.h>
+#include <gpio_sensor.h>
 
 namespace Ui {
 class motor_control;
@@ -34,6 +35,8 @@ private:
     Ui::motor_control *ui;
     motor *m_dca;
     motor *m_dcb;
+    gpio_sensor *sr1;
+    gpio_sensor *sr2;
 };
 
 #endif // MOTOR_CONTROL_H
