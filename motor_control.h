@@ -31,6 +31,8 @@ private slots:
 
     void on_motor_b_speed_valueChanged(int position);
 
+    void update_sensor_display(void);
+
 private:
     Ui::motor_control *ui;
     motor *m_dca;
