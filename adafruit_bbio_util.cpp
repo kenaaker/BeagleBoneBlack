@@ -136,17 +136,17 @@ string build_path(const string &partial_path, const string &prefix) {
     if (!QDir(QString::fromStdString(partial_path)).exists()) {
         return "";
     } else {
-        cout << " build_path partial = \"" << partial_path << "\"" << endl;
-        cout << " build_path prefix = \"" << prefix << "\"" << endl;
+//        cout << " build_path partial = \"" << partial_path << "\"" << endl;
+//        cout << " build_path prefix = \"" << prefix << "\"" << endl;
         QStringList dir_filters(QString::fromStdString(prefix)+"*");
         QDir start_dir(QString::fromStdString(partial_path));
         QStringList matches = start_dir.entryList(dir_filters, QDir::Dirs);
-        cout << " filters = \"" << qPrintable(QString::fromStdString(prefix)+"*") << "\"" << endl;
-        cout << " filtered path = \"" << partial_path + qPrintable(QString::fromStdString(prefix)+"*") << "\"" << endl;
+//        cout << " filters = \"" << qPrintable(QString::fromStdString(prefix)+"*") << "\"" << endl;
+//        cout << " filtered path = \"" << partial_path + qPrintable(QString::fromStdString(prefix)+"*") << "\"" << endl;
         if (matches.empty()) {
             return "";
         } else {
-            cout << " build_path return = \"" << partial_path+matches[0].toStdString() << "\"" << endl;
+//            cout << " build_path return = \"" << partial_path+matches[0].toStdString() << "\"" << endl;
             return partial_path + matches[0].toStdString();
         } /* endif */
     } /* endif */
@@ -178,7 +178,7 @@ int load_device_tree(const string &tree_add_name) {
             QByteArray line(tree_add_name.c_str(), tree_add_name.length());
             tree_file.write(line);
             rc = 1;
-            nanosleep((const struct timespec[]){{0,800000000}},NULL);
+            nanosleep((const struct timespec[]){{0,200000000}},NULL);
         } /* endif */
         tree_file.close();
     } /* endif */

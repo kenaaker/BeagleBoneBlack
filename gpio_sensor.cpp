@@ -14,6 +14,9 @@ gpio_sensor::gpio_sensor(const string in_led_key, const string &in_adc_key) {
 }
 
 gpio_sensor::~gpio_sensor() {
+    led_control->gpio_set_value("0");
+    led_control->gpio_set_direction("in");
+    delete led_control;
     delete sensor;
 }
 

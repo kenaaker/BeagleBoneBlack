@@ -22,6 +22,8 @@ motor_control::motor_control(QWidget *parent) :
 
 motor_control::~motor_control()
 {
+    delete sr1;
+    delete sr2;
     delete m_dcb;
     delete m_dca;
     delete ui;

@@ -77,7 +77,7 @@ int Adafruit_bbio_gpio::gpio_export(const string &in_gpio_key) {
 int Adafruit_bbio_gpio::gpio_set_direction(const string &direction) {
     int rc = -1;
 
-    //cout << " gpio_directory = \"" << gpio_directory.path().toStdString() + "/direction" << "\"" << endl;
+//    cout << " gpio_directory = \"" << gpio_directory.path().toStdString() + "/direction" << "\"" << endl;
 
     QFile direction_file(gpio_directory.path() + "/direction");
     if (!direction_file.open(QIODevice::WriteOnly)) {
@@ -105,7 +105,7 @@ string Adafruit_bbio_gpio::gpio_get_direction() {
 
 int Adafruit_bbio_gpio::gpio_set_value(const string &value) {
     int rc=-1;
-    //cout << " gpio_directory = \"" << gpio_directory.path().toStdString() + "/value" << "\"" << endl;
+//    cout << " gpio_directory = \"" << gpio_directory.path().toStdString() + "/value" << "\"" << endl;
 
     QFile value_file(gpio_directory.path() + "/value");
     if (!value_file.open(QIODevice::WriteOnly)) {
@@ -113,7 +113,7 @@ int Adafruit_bbio_gpio::gpio_set_value(const string &value) {
     } else {
         QTextStream out_value(&value_file);
         out_value << QString::fromStdString(value);
-        //cout << " gpio_set_value = \"" << value << "\"" << endl;
+//        cout << " gpio_set_value = \"" << value << "\"" << endl;
         value_file.close();
         rc = 1;
     } /* endif */

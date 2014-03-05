@@ -54,6 +54,8 @@ Adafruit_bbio_pwm::Adafruit_bbio_pwm(const string &key) {
         if (!load_device_tree(l_pwm_name)) {
             abort();
         } else {
+            int wait_count=100;
+
             pwm_name = l_pwm_name;
             pwm_test_path = build_path(ocp_dir, "pwm_test_" + key);
             cout << " pwm_test_path = \"" << pwm_test_path << "\"" << endl;
@@ -65,7 +67,11 @@ Adafruit_bbio_pwm::Adafruit_bbio_pwm(const string &key) {
             polarity_file_name = pwm_test_path + "/polarity";
             polarity_file.setFileName(QString::fromStdString(polarity_file_name));
             /* Now open all the files */
-            if (!period_file.open(QIODevice::ReadWrite)) {
+            while((!period_file.open(QIODevice::ReadWrite)) && (wait_count > 0)) {
+                nanosleep((const struct timespec[]){{0,200000000}},NULL);
+                --wait_count;
+            } /* endwhile */
+            if (wait_count == 0) {
                 unload_device_tree("bone_pwm_"+key);
                 abort();
             } else {
