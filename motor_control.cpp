@@ -17,7 +17,10 @@ motor_control::motor_control(QWidget *parent) :
     sr2 = new gpio_sensor("P9_27", "P9_40");
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update_sensor_display()));
-    timer->start(100);
+    timer->start(50);
+    current_timer_count = 0;
+    lowest_reading = 100000;
+    highest_reading = 0;
 }
 
 motor_control::~motor_control()
@@ -68,6 +71,22 @@ void motor_control::on_motor_b_speed_valueChanged(int position)
 }
 
 void motor_control::update_sensor_display(void) {
-    QString light_number = QString::number(sr1->sensor_read());
-    ui->light_sensor_display->setText(light_number);
+    unsigned int current_reading = sr1->sensor_read();
+    ++current_timer_count;
+    if ((current_timer_count % 100) == 0) {
+        lowest_reading = 10000;
+        highest_reading = 0;
+    } /* endif */
+    QString light_number = QString::number(lowest_reading);
+    ui->light_sensor_display_low->setText(light_number);
+    light_number = QString::number(current_reading);
+    ui->light_sensor_display_current->setText(light_number);
+    light_number = QString::number(highest_reading);
+    ui->light_sensor_display_high->setText(light_number);
+    if (current_reading < lowest_reading) {
+        lowest_reading = current_reading;
+    } /* endif */
+    if (current_reading > highest_reading) {
+        highest_reading = current_reading;
+    } /* endif */
 }

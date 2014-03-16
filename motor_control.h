@@ -39,6 +39,9 @@ private:
     motor *m_dcb;
     gpio_sensor *sr1;
     gpio_sensor *sr2;
+    unsigned int current_timer_count;
+    unsigned int lowest_reading;
+    unsigned int highest_reading;
 };
 
 #endif // MOTOR_CONTROL_H

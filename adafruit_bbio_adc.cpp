@@ -8,11 +8,11 @@ Adafruit_bbio_adc::Adafruit_bbio_adc(const string &in_adc_key) {
     string adc_prefix_dir;
     if (load_device_tree("cape-bone-iio")) {
         ocp_dir = build_path("/sys/devices/", "ocp") + "/";
-        cout << " ocp_dir = \"" << ocp_dir << "\"" << endl;
+        //cout << " ocp_dir = \"" << ocp_dir << "\"" << endl;
         adc_prefix_dir = build_path(ocp_dir, "helper.") + "/";
         adc_file_path = adc_prefix_dir + "AIN0";
-        cout << " adc_prefix_dir = \"" << adc_prefix_dir << "\"" << endl;
-        cout << " adc_file_path = \"" << adc_file_path << "\"" << endl;
+        //cout << " adc_prefix_dir = \"" << adc_prefix_dir << "\"" << endl;
+        //cout << " adc_file_path = \"" << adc_file_path << "\"" << endl;
         /* Now test open the file */
         adc_value_file.setFileName(QString::fromStdString(adc_file_path));
         if (!adc_value_file.open(QIODevice::ReadOnly)) {
@@ -20,7 +20,7 @@ Adafruit_bbio_adc::Adafruit_bbio_adc(const string &in_adc_key) {
             abort();
         } else {
             ain = pin_lookup.gpio_by_key(in_adc_key);
-            cout << " ain = " << ain << endl;
+            //cout << " ain = " << ain << endl;
             if (ain < 0) {
                 abort();
             } /* endif */

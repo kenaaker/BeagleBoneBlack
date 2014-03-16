@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     adafruit_bbio_gpio.cpp \
     adafruit_bbio_adc.cpp \
     adafruit_bbio_util.cpp \
-    gpio_sensor.cpp
+    gpio_sensor.cpp \
+    ssd1306.cpp
 
 HEADERS  += motor_control.h \
     motor.h \
@@ -29,7 +30,8 @@ HEADERS  += motor_control.h \
     adafruit_bbio_gpio.h \
     adafruit_bbio_adc.h \
     adafruit_bbio_util.h \
-    gpio_sensor.h
+    gpio_sensor.h \
+    ssd1306.h
 
 FORMS    += motor_control.ui
 

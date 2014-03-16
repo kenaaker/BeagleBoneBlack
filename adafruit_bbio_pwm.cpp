@@ -58,11 +58,11 @@ Adafruit_bbio_pwm::Adafruit_bbio_pwm(const string &key) {
 
             pwm_name = l_pwm_name;
             pwm_test_path = build_path(ocp_dir, "pwm_test_" + key);
-            cout << " pwm_test_path = \"" << pwm_test_path << "\"" << endl;
+            //cout << " pwm_test_path = \"" << pwm_test_path << "\"" << endl;
             period_file_name = pwm_test_path + "/period";
             period_file.setFileName(QString::fromStdString(period_file_name));
             duty_file_name = pwm_test_path + "/duty";
-            cout << " duty_file_name = \"" << duty_file_name << endl;
+            //cout << " duty_file_name = \"" << duty_file_name << endl;
             duty_file.setFileName(QString::fromStdString(duty_file_name));
             polarity_file_name = pwm_test_path + "/polarity";
             polarity_file.setFileName(QString::fromStdString(polarity_file_name));
