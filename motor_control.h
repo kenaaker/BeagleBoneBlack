@@ -2,8 +2,8 @@
 #define MOTOR_CONTROL_H
 
 #include <QMainWindow>
-#include <motor.h>
-#include <gpio_sensor.h>
+#include "motor.h"
+#include "gpio_sensor.h"
 
 namespace Ui {
 class motor_control;

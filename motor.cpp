@@ -1,6 +1,8 @@
 
 #include <QtCore>
 #include <QString>
+#include <QtGlobal>
+#include <QtCore/QDebug>
 
 #include <motor.h>
 #include "adafruit_bbio_pwm.h"
@@ -8,6 +10,7 @@
 motor::motor() {
     pwm_pin = "Uninit";
     dir_pin = "Uninit";
+    motor_rotation_speed = 1.0;
 }
 
 motor::~motor() {
@@ -41,6 +44,7 @@ motor::motor(e_motor_id m_id) {
     } /* endswitch */
     motor_id = m_id;
     motor_speed = 0;
+    m_position = 0;
     dir = new Adafruit_bbio_gpio(dir_pin.toStdString());
     dir->gpio_set_direction("out");
     dir->gpio_set_value("1");
@@ -48,17 +52,48 @@ motor::motor(e_motor_id m_id) {
 }
 
 void motor::motor_run(int8_t speed) {
-    uint8_t direction = (speed > 0);
-    uint8_t abs_speed = abs(speed);
+    uint8_t direction;
+    uint8_t abs_speed;
 
+    speed = (int8_t)qBound(-100, (int)speed, 100);
+    direction = (speed > 0);
+
+    abs_speed = abs(speed);
+    m_position = position();        // Update the current position
+    qDebug() << "saving m_position=" << m_position;
     if (direction) {
         dir->gpio_set_value("0");
     } else {
         dir->gpio_set_value("1");
     } /* endif */
     dc->set_duty_cycle(abs_speed);
+    if (abs_speed != 0) {
+        run_start_time.start();
+    } else {
+        run_start_time.invalidate();
+    } /* endif */
+    motor_speed = speed;
 }
 
 void motor::motor_stop(void) {
     motor_run(0);
+}
+
+void motor::set_motor_rotation_speed(float rpm) {
+    motor_rotation_speed = rpm;
+}
+
+int motor::position(void) {
+    int calculated_position;
+    qint64 since_start;
+    if (run_start_time.isValid()) {
+        since_start = run_start_time.nsecsElapsed();
+        double seconds_since_start = ((double)since_start / 1E9);
+
+        double fposition = seconds_since_start * (motor_rotation_speed * (double(motor_speed)/100.0) / 60. * 360.);
+        calculated_position = round(fposition) + m_position;
+    } else {
+        calculated_position = m_position;
+    } /* endif */
+    return calculated_position;
 }
