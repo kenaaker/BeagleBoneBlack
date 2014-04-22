@@ -60,7 +60,6 @@ void motor::motor_run(int8_t speed) {
 
     abs_speed = abs(speed);
     m_position = position();        // Update the current position
-    qDebug() << "saving m_position=" << m_position;
     if (direction) {
         dir->gpio_set_value("0");
     } else {

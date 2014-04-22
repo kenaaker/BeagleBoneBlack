@@ -173,7 +173,7 @@ static inline __s32 i2c_smbus_access(int file, char read_write, __u8 command,
 
 static inline __s32 i2c_smbus_write_quick(int file, __u8 value)
 {
-	return i2c_smbus_access(file,value,0,I2C_SMBUS_QUICK,NULL);
+    return i2c_smbus_access(file,value,0,I2C_SMBUS_QUICK,0);
 }
 	
 static inline __s32 i2c_smbus_read_byte(int file)
@@ -188,7 +188,7 @@ static inline __s32 i2c_smbus_read_byte(int file)
 static inline __s32 i2c_smbus_write_byte(int file, __u8 value)
 {
 	return i2c_smbus_access(file,I2C_SMBUS_WRITE,value,
-	                        I2C_SMBUS_BYTE,NULL);
+                            I2C_SMBUS_BYTE,0);
 }
 
 static inline __s32 i2c_smbus_read_byte_data(int file, __u8 command)

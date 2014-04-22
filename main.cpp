@@ -1,5 +1,7 @@
 
 #include <QApplication>
+
+#include "gpio_keypad.h"
 #include "motor_control.h"
 
 int main(int argc, char *argv[])

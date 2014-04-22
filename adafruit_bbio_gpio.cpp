@@ -132,3 +132,25 @@ string Adafruit_bbio_gpio::gpio_get_value() {
     } /* endif */
     return value_str;
 } /* gpio_get_value */
+
+// Return the file path of this gpio for the value file */
+string Adafruit_bbio_gpio::gpio_get_path() {
+    return (gpio_directory.path() + "/value").toStdString();
+} /* gpio_get_path */
+
+int Adafruit_bbio_gpio::gpio_set_edge(const string &edge_name) {
+    int rc=-1;
+//    cout << " gpio_directory = \"" << gpio_directory.path().toStdString() + "/value" << "\"" << endl;
+
+    QFile edge_file(gpio_directory.path() + "/edge");
+    if (!edge_file.open(QIODevice::WriteOnly)) {
+        rc = -1;
+    } else {
+        QTextStream out_edge(&edge_file);
+        out_edge << QString::fromStdString(edge_name);
+//        cout << " gpio_set_edge = \"" << edge_name << "\"" << endl;
+        edge_file.close();
+        rc = 1;
+    } /* endif */
+    return rc;
+} /* gpio_set_edge */

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "motor.h"
 #include "gpio_sensor.h"
+#include "gpio_keypad.h"
 
 namespace Ui {
 class motor_control;
@@ -39,6 +40,7 @@ private:
     motor *m_dcb;
     gpio_sensor *sr1;
     gpio_sensor *sr2;
+    gpio_keypad *keypad_1;
     unsigned int current_timer_count;
     unsigned int lowest_reading;
     unsigned int highest_reading;

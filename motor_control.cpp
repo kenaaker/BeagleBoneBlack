@@ -2,7 +2,7 @@
 #include "ui_motor_control.h"
 #include "gpio_sensor.h"
 #include <QTimer>
-
+#include <QString>
 
 motor_control::motor_control(QWidget *parent) :
     QMainWindow(parent),
@@ -15,6 +15,7 @@ motor_control::motor_control(QWidget *parent) :
     m_dcb = new motor(e_motor_id::e_motor_b);
     sr1 = new gpio_sensor("P9_25", "P9_39");
     sr2 = new gpio_sensor("P9_27", "P9_40");
+    keypad_1 = new gpio_keypad("P8_39", "sw_1");
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update_sensor_display()));
     timer->start(50);
