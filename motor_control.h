@@ -40,7 +40,13 @@ private:
     motor *m_dcb;
     gpio_sensor *sr1;
     gpio_sensor *sr2;
-    gpio_keypad *keypad_1;
+    gpio_keypad *keypad_sw1;
+    gpio_keypad *keypad_a;
+    gpio_keypad *keypad_b;
+    gpio_keypad *keypad_sw2;
+    gpio_keypad *keypad_sw3;
+    gpio_keypad *keypad_sw4;
+    gpio_keypad *keypad_sw5;
     unsigned int current_timer_count;
     unsigned int lowest_reading;
     unsigned int highest_reading;

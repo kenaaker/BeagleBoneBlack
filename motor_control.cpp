@@ -15,7 +15,13 @@ motor_control::motor_control(QWidget *parent) :
     m_dcb = new motor(e_motor_id::e_motor_b);
     sr1 = new gpio_sensor("P9_25", "P9_39");
     sr2 = new gpio_sensor("P9_27", "P9_40");
-    keypad_1 = new gpio_keypad("P8_39", "sw_1");
+    keypad_sw1 = new gpio_keypad("P8_39", "SW_1");
+    keypad_a = new gpio_keypad("P8_32", "A");
+    keypad_b = new gpio_keypad("P8_33", "B");
+    keypad_sw2 = new gpio_keypad("P8_34", "SW_2");
+    keypad_sw3 = new gpio_keypad("P8_35", "SW_3");
+    keypad_sw4 = new gpio_keypad("P8_38", "SW_4");
+    keypad_sw5 = new gpio_keypad("P8_37", "SW_5");
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update_sensor_display()));
     timer->start(50);

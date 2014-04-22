@@ -14,6 +14,8 @@ public:
     ~gpio_keypad();
     int keypad_fd(void);            /* Return the file descriptor for the keypad interrupt device */
     QString const keyname(void);    /* Return the name of the key for this object */
+signals:
+    void button_pushed(int on_off);
 private:
     Adafruit_bbio_gpio *this_gpio;  /* GPIO object for this pin */
     QFile keypad_value;             /* GPIO keypad value file for keypad file. */

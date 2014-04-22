@@ -47,9 +47,10 @@ void gpio_keypad::ready_read(int) {
         abort();
     } else {
         current_value = line[0];
+        emit button_pushed(current_value);
     } /* endif */
     if (current_value != last_value) {
-        qDebug() << "switch value changed, old=" << last_value << "current_value" << current_value;
+        qDebug() << "key" << key_name << "switch value changed, old=" << last_value << "current_value" << current_value;
     } /* endif */
 } /* ready_read */
 
