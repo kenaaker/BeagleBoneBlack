@@ -13,8 +13,8 @@ public:
     ~pins_table();
     int gpio_by_key(const string &key);
     int gpio_by_name(const string &name);
-    int ain_by_key(const string &key);
-    int ain_by_name(const string &name);
+    string ain_by_key(const string &key);
+    string ain_by_name(const string &name);
     string pwm_key_by_key(const string &key);
     string pwm_key_by_name(const string &name);
     int gpio_number(const string &key);

@@ -78,7 +78,7 @@ void motor_control::on_motor_b_speed_valueChanged(int position)
 }
 
 void motor_control::update_sensor_display(void) {
-    unsigned int current_reading = sr1->sensor_read();
+    unsigned int current_reading = sr2->sensor_read();
     ++current_timer_count;
     if ((current_timer_count % 100) == 0) {
         lowest_reading = 10000;

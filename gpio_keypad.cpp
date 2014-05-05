@@ -11,7 +11,7 @@ gpio_keypad::gpio_keypad(QString sw_pin, QString in_key_name) {
         QString gpio_value_path;
         key_name = in_key_name;
         gpio_value_path = QString::fromStdString(this_gpio->gpio_get_path());
-        qDebug() << "keypad path=" << gpio_value_path;
+//        qDebug() << "keypad path=" << gpio_value_path;
         keypad_value.setFileName(gpio_value_path);      /* Set up the value file */
         this_gpio->gpio_set_direction("in");
         this_gpio->gpio_set_edge("both");             /* Interrupt on rising edge */
@@ -42,7 +42,7 @@ void gpio_keypad::ready_read(int) {
     keypad_value.seek(0);
     char last_value = current_value;
     line = keypad_value.readAll();
-    qDebug() << "bytes_read=" << line.size();
+//    qDebug() << "bytes_read=" << line.size();
     if (line.size() < 1) {
         abort();
     } else {
@@ -50,7 +50,7 @@ void gpio_keypad::ready_read(int) {
         emit button_pushed(current_value);
     } /* endif */
     if (current_value != last_value) {
-        qDebug() << "key" << key_name << "switch value changed, old=" << last_value << "current_value" << current_value;
+//        qDebug() << "key" << key_name << "switch value changed, old=" << last_value << "current_value" << current_value;
     } /* endif */
 } /* ready_read */
 

@@ -132,6 +132,27 @@ int pins_table::gpio_by_name(const string &name) {
         return -1;
     } /* endif */
 }
+
+string pins_table::ain_by_key(const string &key) {
+    list<pins_entry_t>::iterator p_i;
+    p_i = find_if(pins.begin(), pins.end(), [&](pins_entry &p){return p.key == key;});
+    if (p_i != pins.end()) {
+        return p_i->name;
+    } else {
+        return "";
+    } /* endif */
+}
+
+string pins_table::ain_by_name(const string &name) {
+    list<pins_entry_t>::iterator p_i;
+    p_i = find_if(pins.begin(), pins.end(), [&](pins_entry &p){return p.name == name;});
+    if (p_i != pins.end()) {
+        return p_i->name;
+    } else {
+        return "";
+    } /* endif */
+}
+
 string build_path(const string &partial_path, const string &prefix) {
     if (!QDir(QString::fromStdString(partial_path)).exists()) {
         return "";

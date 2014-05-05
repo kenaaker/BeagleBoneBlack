@@ -3,6 +3,7 @@
 
 #include <QDir>
 #include <QFile>
+#include <QTimer>
 #include <list>
 
 using namespace std;
@@ -15,8 +16,8 @@ using namespace std;
 using namespace std;
 #include <string>
 
-class Adafruit_bbio_adc
-{
+class Adafruit_bbio_adc {
+
 public:
     Adafruit_bbio_adc();
     Adafruit_bbio_adc(const string &in_adc_key);
@@ -25,8 +26,9 @@ public:
 private:
     string ocp_dir;
     string adc_file_path;
-    int ain;
+    string ain;
     QFile adc_value_file;
+
 };
 
 #endif // ADAFRUIT_BBIO_ADC_H
