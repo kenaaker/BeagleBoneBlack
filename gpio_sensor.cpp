@@ -3,6 +3,8 @@
 #include "adafruit_bbio_gpio.h"
 #include <QtCore/qdebug.h>
 
+#include <time.h>
+
 gpio_sensor::gpio_sensor() {
     sensor = NULL;
 }
@@ -61,6 +63,7 @@ void gpio_sensor::set_read_interval(int poll_interval_msec) {
             connect(&read_timer, SIGNAL(timeout()), this, SLOT(adc_read()));
         } /* endif */
         read_timer.start(read_interval);
+        time_since_start.start();
     } else {
         if (read_timer.isActive()) {
             read_timer.stop();
@@ -71,19 +74,28 @@ void gpio_sensor::set_read_interval(int poll_interval_msec) {
 /* Timer driven function to sample ADC and emit signal if bounds call for it */
 void gpio_sensor::adc_read(void) {
     int adc_reading = sensor_read();
-
-//    qDebug() << "adc_reading = " << adc_reading;
+//    qDebug() << time_since_start.elapsed() << adc_reading;
 
     /* in_bounds means emit a signal if value is inside bounds */
     if (in_bounds) {
-//        qDebug() << "in_bounds";
+//        qDebug() << "signaling if in_bounds";
         if ((adc_reading > low_bound) && (adc_reading < high_bound)) {
-            emit (adc_signal(adc_reading));
+            if (was_out_last_time) {
+                emit (adc_signal(adc_reading));
+            } /* endif */
+            was_out_last_time = false;
+        } else {
+            was_out_last_time = true;
         } /* endif */
     } else { /* Otherwise, emit a signal if value is outside bounds */
 //        qDebug() << "out_bounds";
         if ((adc_reading < low_bound) || (adc_reading > high_bound)) {
-            emit (adc_signal(adc_reading));
+            if (!was_out_last_time) {
+                emit (adc_signal(adc_reading));
+            } /* endif */
+            was_out_last_time = true;
+        } else {
+            was_out_last_time = false;
         } /* endif */
     } /* endif */
 } /* adc_read */

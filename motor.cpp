@@ -49,6 +49,7 @@ motor::motor(e_motor_id m_id) {
     dir->gpio_set_direction("out");
     dir->gpio_set_value("1");
     dc = new Adafruit_bbio_pwm(pwm_pin.toStdString());
+    connect(&movement_timer, SIGNAL(timeout()), this, SLOT(movement_check()));
 }
 
 void motor::motor_run(int8_t speed) {
@@ -82,6 +83,10 @@ void motor::set_motor_rotation_speed(float rpm) {
     motor_rotation_speed = rpm;
 }
 
+void motor::set_motor_position(int pos_degrees) {
+    m_position = pos_degrees;
+}
+
 int motor::position(void) {
     int calculated_position;
     qint64 since_start;
@@ -94,5 +99,45 @@ int motor::position(void) {
     } else {
         calculated_position = m_position;
     } /* endif */
-    return calculated_position;
+
+    return calculated_position % 360;
+}
+
+void motor::motor_goto_pos(int pos_degrees, int speed=30) {
+    if (movement_timer.isActive()) {
+        abort();
+    } else {
+        int rotation_delta;
+        int curr_pos = abs((position() + 360) % 360);
+        destination_pos = pos_degrees % 360;
+        // qDebug() << "motor_goto_pos destination is" << destination_pos << "current pos is" << curr_pos;
+        /* Calculate minimal rotation distance and direction, 0 <= n <= 180  dest < orig -> -move, dest > orig -> +move */
+        rotation_delta = destination_pos - curr_pos;
+        // qDebug() << "1 rotation delta is" << rotation_delta << "speed is " << speed;
+        if (rotation_delta < 0) {
+            speed = -speed;
+        } /* endif */
+        /* Now see if there's a shorter rotation, the other way */
+        if (((destination_pos + 360) - curr_pos) < 180) {
+            speed = -speed;
+        } /* endif */
+        if (rotation_delta > 180) {
+            speed = -speed;
+        } /* endif */
+        // qDebug() << "2 rotation delta is" << rotation_delta << "speed is " << speed;
+        movement_timer.start(25);               /* Start a 25 millisecond timer to monitor motor position */
+        motor_run(speed);
+    } /* endif */
+}
+
+/* Entered from timer to check if movement is finished */
+/* Emits movement_done when it decides the movement is finished */
+void motor::movement_check(void) {
+    int curr_pos = abs((position() + 360) % 360);
+    //qDebug() << "Movement_check destination is" << destination_pos << "current pos is" << curr_pos;
+    if ((curr_pos >= destination_pos-dest_fuzz) && (curr_pos <=destination_pos+dest_fuzz)) {
+        motor_stop();
+        movement_timer.stop();
+        emit movement_done(m_position);
+    } /* endif */
 }

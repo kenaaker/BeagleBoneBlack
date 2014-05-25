@@ -1,6 +1,7 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 #include <QElapsedTimer>
+#include <QTimer>
 
 #include "adafruit_bbio_pwm.h"
 #include "adafruit_bbio_gpio.h"
@@ -21,7 +22,8 @@ enum class e_motor_id {
     e_motor_d
 };
 
-class motor {
+class motor : public QObject {
+    Q_OBJECT
 
 public:
     motor();
@@ -30,9 +32,14 @@ public:
     void motor_run(int8_t speed);
     void motor_stop(void);
     void set_motor_rotation_speed(float rpm);
+    void set_motor_position(int pos_degrees);
     int position();             /* Return the rotation position */
+    void motor_goto_pos(int pos_degrees, int speed);
 
+signals:
+    void movement_done(int pos_degrees);
 private:
+    static const int dest_fuzz = 1;
     QString pwm_pin;
     QString dir_pin;
     int gpio_dir_pin;
@@ -42,8 +49,12 @@ private:
     Adafruit_bbio_pwm *dc;      /* Pulse Width Modulated motor control for motor */
     Adafruit_bbio_gpio *dir;    /* Direction control GPIO pin */
     QElapsedTimer run_start_time;
+    QTimer movement_timer;      /* Timer used to monitor motor moving to position */
     int m_position;             /* Estimated motor position in degrees */
     float motor_rotation_speed; /* Motor rotation speed in RPM (fractional for slow motor) */
+    int destination_pos;        /* motor movement destination in degrees */
+private slots:
+    void movement_check(void);
 };
 
 #endif // MOTOR_H

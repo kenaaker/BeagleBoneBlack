@@ -5,6 +5,7 @@
 using namespace std;
 
 #include <string>
+#include <QTime>
 
 class gpio_sensor : public QObject {
     Q_OBJECT
@@ -26,10 +27,12 @@ private:
     Adafruit_bbio_adc *sensor;
     Adafruit_bbio_gpio *led_control;
     QTimer read_timer;
+    QTime time_since_start;
     unsigned read_interval;
     int low_bound;
     int high_bound;
-    bool in_bounds;
+    bool in_bounds;         /* Signal when in bounds if true, out of bounds if false */
+    bool was_out_last_time; /* Don't signal repeatedly. Just on transition */
 private slots:
     void adc_read(void);
 };

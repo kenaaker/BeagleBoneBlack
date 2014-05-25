@@ -221,8 +221,8 @@ int unload_device_tree(const string &tree_del_name) {
                 break;
             } /* endif */
             if (check_string.contains(QString::fromStdString(tree_del_name))) { /* It IS loaded */
-                size_t colon_pos = check_string.indexOf(":");
-                size_t num_pos = check_string.indexOf(QRegExp("[0-9]+"));
+//                size_t colon_pos = check_string.indexOf(":");
+//                size_t num_pos = check_string.indexOf(QRegExp("[0-9]+"));
 //                QString slot_line = "-" + check_string.mid(num_pos, colon_pos-num_pos);
 //                in_out << slot_line;
                 rc = 1;
