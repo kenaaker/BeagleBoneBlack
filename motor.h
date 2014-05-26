@@ -31,6 +31,9 @@ public:
     ~motor();
     void motor_run(int8_t speed);
     void motor_stop(void);
+    void motor_pause(void);
+    void motor_resume(void);
+    int8_t motor_get_speed();
     void set_motor_rotation_speed(float rpm);
     void set_motor_position(int pos_degrees);
     int position();             /* Return the rotation position */
@@ -45,6 +48,7 @@ private:
     int gpio_dir_pin;
     e_motor_id motor_id;
     int8_t motor_speed;         /* negative motor speed is reverse rotation */
+    int8_t suspended_motor_speed;/* negative motor speed is reverse rotation */
     /* Interfaces to GPIO stuff */
     Adafruit_bbio_pwm *dc;      /* Pulse Width Modulated motor control for motor */
     Adafruit_bbio_gpio *dir;    /* Direction control GPIO pin */

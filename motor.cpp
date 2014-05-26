@@ -44,6 +44,7 @@ motor::motor(e_motor_id m_id) {
     } /* endswitch */
     motor_id = m_id;
     motor_speed = 0;
+    suspended_motor_speed = 0;
     m_position = 0;
     dir = new Adafruit_bbio_gpio(dir_pin.toStdString());
     dir->gpio_set_direction("out");
@@ -56,6 +57,7 @@ void motor::motor_run(int8_t speed) {
     uint8_t direction;
     uint8_t abs_speed;
 
+//    qDebug() << "motor_run set speed to " << speed;
     speed = (int8_t)qBound(-100, (int)speed, 100);
     direction = (speed > 0);
 
@@ -77,7 +79,21 @@ void motor::motor_run(int8_t speed) {
 
 void motor::motor_stop(void) {
     motor_run(0);
+    suspended_motor_speed = 0; /* Make sure the motor stops, so resume doesn't. */
 }
+
+void motor::motor_pause(void) {
+    suspended_motor_speed = motor_speed;
+    motor_run(0);
+} /* motor_pause */
+
+void motor::motor_resume(void) {
+    motor_run(suspended_motor_speed);
+} /* motor_resume */
+
+int8_t motor::motor_get_speed() {
+    return motor_speed;
+} /* motor_get_speed */
 
 void motor::set_motor_rotation_speed(float rpm) {
     motor_rotation_speed = rpm;
@@ -113,7 +129,7 @@ void motor::motor_goto_pos(int pos_degrees, int speed=30) {
         int calc_position = position();
         int curr_pos = abs((calc_position + 360) % 360);
         destination_pos = pos_degrees % 360;
-//         qDebug() << "motor_goto_pos destination is" << destination_pos << "calc_position is" << calc_position << "current pos is" << curr_pos;
+//        qDebug() << "motor_goto_pos destination is" << destination_pos << "calc_position is" << calc_position << "current pos is" << curr_pos;
         /* Calculate minimal rotation distance and direction, 0 <= n <= 180  dest < orig -> -move, dest > orig -> +move */
         min_rotation_delta = 180 - abs(abs(destination_pos - curr_pos) - 180);
         rotation_delta = (destination_pos - curr_pos);
