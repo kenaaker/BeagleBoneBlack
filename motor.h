@@ -39,7 +39,7 @@ public:
 signals:
     void movement_done(int pos_degrees);
 private:
-    static const int dest_fuzz = 1;
+    static const int dest_fuzz = 2;
     QString pwm_pin;
     QString dir_pin;
     int gpio_dir_pin;
